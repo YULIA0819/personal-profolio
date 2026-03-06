@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>王珩宇 · Personal Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Mono:wght@300;400;500&family=Noto+Serif+SC:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #0d1f2d;
+    --paper: #f0f6fb;
+    --cream: #e4f0f8;
+    --blue: #2a7db5;
+    --blue-light: #5aabdc;
+    --blue-pale: #b8d9ef;
+    --muted: #5a7a90;
+    --line: rgba(42,125,181,0.15);
+    --line-dark: rgba(13,31,45,0.1);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    line-height: 1.7;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    position: fixed;
+    width: 10px; height: 10px;
+    background: var(--blue);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: width 0.2s, height 0.2s, opacity 0.2s;
+    mix-blend-mode: multiply;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 36px; height: 36px;
+    border: 1.5px solid var(--blue);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: all 0.15s ease;
+    opacity: 0.4;
+  }
+
+  /* Subtle grain overlay */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 9997; opacity: 0.5;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 22px 56px;
+    background: linear-gradient(to bottom, var(--paper) 65%, transparent);
+  }
+
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 900; letter-spacing: -0.5px;
+    color: var(--ink); text-decoration: none;
+  }
+
+  .nav-logo span { color: var(--blue); }
+
+  .nav-links { display: flex; gap: 36px; list-style: none; }
+  .nav-links a {
+    font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--muted); text-decoration: none; transition: color 0.2s;
+    position: relative; cursor: none;
+  }
+  .nav-links a::after {
+    content: ''; position: absolute; bottom: -2px; left: 0;
+    width: 0; height: 1px; background: var(--blue); transition: width 0.3s;
+  }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-links a:hover::after { width: 100%; }
+
+  /* ─── HERO ─── */
+  .hero {
+    min-height: 100vh;
+    display: grid; grid-template-columns: 1.1fr 0.9fr;
+    position: relative; overflow: hidden;
+  }
+
+  .hero-left {
+    padding: 160px 64px 80px 64px;
+    display: flex; flex-direction: column; justify-content: center;
+    position: relative; z-index: 2;
+  }
+
+  .hero-tag {
+    font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--blue); margin-bottom: 28px;
+    display: flex; align-items: center; gap: 12px;
+    opacity: 0; animation: fadeUp 0.8s 0.2s forwards;
+  }
+  .hero-tag::before {
+    content: ''; width: 28px; height: 1px;
+    background: var(--blue); display: block;
+  }
+
+  .hero-name {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(56px, 6.5vw, 92px);
+    font-weight: 900; line-height: 0.95; letter-spacing: -3px;
+    margin-bottom: 28px;
+    opacity: 0; animation: fadeUp 0.8s 0.4s forwards;
+  }
+  .hero-name em { font-style: italic; color: var(--blue); }
+
+  .hero-en {
+    font-size: 13px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 28px;
+    opacity: 0; animation: fadeUp 0.8s 0.5s forwards;
+  }
+
+  .hero-desc {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 15px; line-height: 2; color: var(--muted);
+    max-width: 400px; margin-bottom: 48px;
+    opacity: 0; animation: fadeUp 0.8s 0.6s forwards;
+  }
+
+  .hero-actions {
+    display: flex; gap: 14px;
+    opacity: 0; animation: fadeUp 0.8s 0.8s forwards;
+  }
+
+  .btn-primary {
+    padding: 13px 30px; background: var(--ink); color: var(--paper);
+    font-family: 'DM Mono', monospace; font-size: 10px;
+    letter-spacing: 2px; text-transform: uppercase;
+    text-decoration: none; border: none; cursor: none;
+    transition: background 0.2s, transform 0.2s;
+  }
+  .btn-primary:hover { background: var(--blue); transform: translateY(-2px); }
+
+  .btn-secondary {
+    padding: 13px 30px; background: transparent; color: var(--ink);
+    font-family: 'DM Mono', monospace; font-size: 10px;
+    letter-spacing: 2px; text-transform: uppercase;
+    text-decoration: none; border: 1px solid var(--blue-pale); cursor: none;
+    transition: all 0.2s;
+  }
+  .btn-secondary:hover { background: var(--blue); color: white; border-color: var(--blue); transform: translateY(-2px); }
+
+  .hero-right {
+    position: relative; display: flex; align-items: center; justify-content: center;
+    overflow: hidden; background: var(--cream);
+  }
+
+  /* Abstract geometric art */
+  .hero-art {
+    width: 100%; height: 100vh;
+    position: relative; display: flex; align-items: center; justify-content: center;
+    opacity: 0; animation: fadeIn 1.2s 0.5s forwards;
+  }
+
+  .art-circle {
+    position: absolute; border-radius: 50%;
+    border: 1px solid var(--blue-pale);
+    animation: rotateSlow 20s linear infinite;
+  }
+  .art-circle:nth-child(1) { width: 360px; height: 360px; border-color: rgba(42,125,181,0.15); }
+  .art-circle:nth-child(2) { width: 260px; height: 260px; border-color: rgba(42,125,181,0.25); animation-duration: 14s; animation-direction: reverse; }
+  .art-circle:nth-child(3) { width: 160px; height: 160px; border-color: rgba(42,125,181,0.4); animation-duration: 9s; }
+  .art-dot { position: absolute; width: 8px; height: 8px; background: var(--blue); border-radius: 50%; opacity: 0.6; }
+  .art-dot:nth-child(4) { top: calc(50% - 180px); left: 50%; }
+  .art-dot:nth-child(5) { bottom: calc(50% - 180px); left: 50%; }
+
+  .art-initials {
+    font-family: 'Playfair Display', serif;
+    font-size: 96px; font-weight: 900;
+    color: var(--blue); opacity: 0.08;
+    letter-spacing: -4px; user-select: none;
+    position: absolute;
+  }
+
+  .hero-badge {
+    position: absolute; bottom: 48px; right: 48px;
+    display: flex; flex-direction: column; gap: 3px;
+    text-align: right; opacity: 0; animation: fadeIn 1s 1.2s forwards;
+  }
+  .hero-badge strong {
+    font-family: 'Playfair Display', serif; font-size: 32px;
+    font-weight: 900; color: var(--blue); letter-spacing: -1px; display: block;
+  }
+  .hero-badge span { font-size: 10px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; }
+
+  /* ─── MARQUEE ─── */
+  .marquee-section {
+    border-top: 1px solid var(--line-dark); border-bottom: 1px solid var(--line-dark);
+    overflow: hidden; padding: 16px 0; background: var(--ink);
+  }
+  .marquee-track {
+    display: flex; white-space: nowrap;
+    animation: marquee 24s linear infinite;
+  }
+  .marquee-item {
+    font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+    color: rgba(240,246,251,0.6); padding: 0 36px; flex-shrink: 0;
+  }
+  .marquee-sep { color: var(--blue-light) !important; opacity: 1 !important; padding: 0; }
+
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @keyframes rotateSlow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+  /* ─── COMMON SECTION ─── */
+  .section-wrap { padding: 110px 64px; max-width: 1380px; margin: 0 auto; }
+  .full-bleed { max-width: 100%; }
+  .full-bleed .section-wrap { max-width: 1380px; margin: 0 auto; }
+
+  .section-label {
+    font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--blue); margin-bottom: 60px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .section-label::after {
+    content: ''; flex: 1; height: 1px; background: var(--line-dark); max-width: 80px;
+  }
+
+  /* ─── ABOUT ─── */
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+
+  .about-headline {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 3.5vw, 48px); font-weight: 700;
+    line-height: 1.1; letter-spacing: -1.5px; margin-bottom: 28px;
+  }
+  .about-headline em { font-style: italic; color: var(--blue); }
+
+  .about-body {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 15px; line-height: 2; color: var(--muted);
+  }
+  .about-body p + p { margin-top: 16px; }
+
+  .edu-card {
+    border: 1px solid var(--line-dark); background: white; padding: 32px;
+    margin-bottom: 16px; transition: box-shadow 0.2s;
+    position: relative; overflow: hidden;
+  }
+  .edu-card::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+    width: 3px; background: var(--blue);
+  }
+  .edu-card:hover { box-shadow: 0 4px 24px rgba(42,125,181,0.1); }
+  .edu-school {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px; font-weight: 700; margin-bottom: 4px; letter-spacing: -0.3px;
+  }
+  .edu-degree { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--blue); margin-bottom: 6px; }
+  .edu-meta { font-size: 12px; color: var(--muted); }
+  .edu-courses { font-size: 12px; color: var(--muted); margin-top: 10px; line-height: 1.7; font-family: 'Noto Serif SC', serif; }
+
+  .skills-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line-dark); border: 1px solid var(--line-dark); margin-top: 24px; }
+  .skill-item { background: white; padding: 16px 20px; transition: background 0.2s; }
+  .skill-item:hover { background: var(--cream); }
+  .skill-name { font-size: 11px; font-weight: 500; letter-spacing: 0.3px; margin-bottom: 6px; }
+  .skill-bar { height: 2px; background: var(--line-dark); position: relative; overflow: hidden; }
+  .skill-bar-fill {
+    position: absolute; left: 0; top: 0; bottom: 0; background: var(--blue);
+    transform: scaleX(0); transform-origin: left; transition: transform 1.2s ease;
+  }
+  .skill-bar-fill.animate { transform: scaleX(1); }
+
+  /* ─── EXPERIENCE ─── */
+  .exp-bg { background: var(--cream); }
+
+  .timeline { display: flex; flex-direction: column; position: relative; }
+  .timeline::before {
+    content: ''; position: absolute; left: 180px; top: 0; bottom: 0;
+    width: 1px; background: var(--line-dark);
+  }
+
+  .timeline-item {
+    display: grid; grid-template-columns: 180px 1fr;
+    gap: 40px; padding: 44px 0; border-bottom: 1px solid var(--line-dark);
+    position: relative;
+  }
+  .timeline-item:last-child { border-bottom: none; }
+  .timeline-item::before {
+    content: ''; position: absolute; left: 180px; top: 52px;
+    width: 8px; height: 8px; background: white;
+    border: 2px solid var(--blue); border-radius: 50%;
+    transform: translateX(-4px); transition: background 0.2s;
+  }
+  .timeline-item:hover::before { background: var(--blue); }
+
+  .timeline-date { font-size: 11px; letter-spacing: 0.5px; color: var(--muted); text-align: right; padding-top: 4px; line-height: 1.7; }
+  .timeline-type { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--blue); display: block; margin-top: 4px; }
+  .timeline-content { padding-left: 44px; }
+  .timeline-role { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; margin-bottom: 3px; letter-spacing: -0.3px; }
+  .timeline-company { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--blue); margin-bottom: 16px; }
+  .timeline-list { list-style: none; padding: 0; }
+  .timeline-list li {
+    font-family: 'Noto Serif SC', serif; font-size: 14px; line-height: 1.85;
+    color: var(--muted); padding: 6px 0 6px 16px; border-bottom: 1px solid var(--line);
+    position: relative;
+  }
+  .timeline-list li:last-child { border-bottom: none; }
+  .timeline-list li::before {
+    content: ''; position: absolute; left: 0; top: 16px;
+    width: 4px; height: 4px; background: var(--blue); border-radius: 50%;
+  }
+  .timeline-list li strong { color: var(--ink); font-weight: 700; }
+  .timeline-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
+  .tag {
+    font-size: 10px; letter-spacing: 1.2px; text-transform: uppercase;
+    color: var(--blue); border: 1px solid var(--blue-pale); padding: 3px 9px;
+    background: white;
+  }
+
+  /* ─── PROJECTS ─── */
+  .projects-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; background: var(--line-dark); border: 1px solid var(--line-dark); }
+
+  .project-card {
+    background: white; padding: 40px 36px;
+    display: flex; flex-direction: column; gap: 14px;
+    cursor: none; transition: background 0.3s; min-height: 340px;
+    position: relative; overflow: hidden;
+  }
+  .project-card::before {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+    height: 3px; background: var(--blue);
+    transform: scaleX(0); transform-origin: left; transition: transform 0.4s;
+  }
+  .project-card:hover { background: var(--cream); }
+  .project-card:hover::before { transform: scaleX(1); }
+
+  .project-num { font-size: 10px; letter-spacing: 2px; color: var(--muted); }
+  .project-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; letter-spacing: -0.3px; line-height: 1.2; }
+  .project-context { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--blue); }
+  .project-desc { font-family: 'Noto Serif SC', serif; font-size: 14px; line-height: 1.9; color: var(--muted); flex: 1; }
+  .project-result {
+    background: var(--cream); border-left: 3px solid var(--blue);
+    padding: 12px 16px; font-family: 'Noto Serif SC', serif;
+    font-size: 13px; line-height: 1.7; color: var(--ink);
+  }
+
+  /* ─── METRICS ─── */
+  .metrics-strip { background: var(--ink); padding: 80px 0; }
+  .metrics-inner {
+    max-width: 1380px; margin: 0 auto; padding: 0 64px;
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 1px; background: rgba(240,246,251,0.06);
+  }
+  .metric-item { background: var(--ink); padding: 44px 36px; transition: background 0.2s; }
+  .metric-item:hover { background: #122030; }
+  .metric-num {
+    font-family: 'Playfair Display', serif; font-size: 52px; font-weight: 900;
+    color: var(--paper); line-height: 1; letter-spacing: -2px;
+  }
+  .metric-num span { color: var(--blue-light); }
+  .metric-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: rgba(240,246,251,0.4); margin-top: 10px; }
+  .metric-desc { font-family: 'Noto Serif SC', serif; font-size: 12px; line-height: 1.6; color: rgba(240,246,251,0.2); margin-top: 8px; }
+
+  /* ─── SKILLS SECTION ─── */
+  .tech-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px;
+    background: var(--line-dark); border: 1px solid var(--line-dark);
+  }
+  .tech-item {
+    background: white; padding: 28px 24px; text-align: center;
+    transition: background 0.2s;
+  }
+  .tech-item:hover { background: var(--cream); }
+  .tech-icon { font-size: 22px; margin-bottom: 8px; }
+  .tech-name { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ink); font-weight: 500; }
+  .tech-type { font-size: 10px; color: var(--muted); margin-top: 4px; }
+
+  /* ─── CONTACT ─── */
+  .contact-bg { background: var(--cream); }
+  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+  .contact-headline {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 4vw, 54px); font-weight: 900;
+    line-height: 0.95; letter-spacing: -2px; margin-bottom: 28px;
+  }
+  .contact-headline em { font-style: italic; color: var(--blue); }
+  .contact-sub { font-family: 'Noto Serif SC', serif; font-size: 15px; line-height: 2; color: var(--muted); margin-bottom: 40px; }
+
+  .contact-links { display: flex; flex-direction: column; gap: 0; border: 1px solid var(--line-dark); }
+  .contact-link {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 18px 24px; border-bottom: 1px solid var(--line-dark);
+    text-decoration: none; color: var(--ink); cursor: none; transition: background 0.2s;
+  }
+  .contact-link:last-child { border-bottom: none; }
+  .contact-link:hover { background: white; }
+  .contact-link-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+  .contact-link-value { font-size: 12px; color: var(--blue); margin-top: 2px; display: block; }
+  .contact-link-arrow { opacity: 0.3; transition: opacity 0.2s, transform 0.2s; }
+  .contact-link:hover .contact-link-arrow { opacity: 1; transform: translateX(4px); }
+
+  .contact-form { display: flex; flex-direction: column; gap: 0; border: 1px solid var(--line-dark); background: white; }
+  .form-field { border-bottom: 1px solid var(--line-dark); position: relative; }
+  .form-field:last-of-type { border-bottom: none; }
+  .form-field label { display: block; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); padding: 16px 24px 0; }
+  .form-field input, .form-field textarea {
+    width: 100%; background: transparent; border: none; outline: none;
+    font-family: 'DM Mono', monospace; font-size: 13px; color: var(--ink);
+    padding: 6px 24px 16px; resize: none; cursor: none;
+  }
+  .form-field textarea { min-height: 110px; }
+  .form-submit { padding: 18px 24px; display: flex; justify-content: flex-end; border-top: 1px solid var(--line-dark); }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--ink); padding: 44px 64px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .footer-logo { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 900; color: var(--paper); letter-spacing: -0.5px; }
+  .footer-logo span { color: var(--blue-light); }
+  .footer-copy { font-size: 10px; letter-spacing: 1px; color: rgba(240,246,251,0.25); }
+  .footer-back { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: rgba(240,246,251,0.35); text-decoration: none; cursor: none; transition: color 0.2s; }
+  .footer-back:hover { color: var(--paper); }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.8s ease, transform 0.8s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  ::-webkit-scrollbar { width: 3px; }
+  ::-webkit-scrollbar-track { background: var(--paper); }
+  ::-webkit-scrollbar-thumb { background: var(--blue); }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-right { display: none; }
+    nav { padding: 18px 24px; }
+    .nav-links { gap: 20px; }
+    .section-wrap { padding: 72px 24px; }
+    .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+    .projects-grid { grid-template-columns: 1fr; }
+    .metrics-inner { grid-template-columns: 1fr 1fr; padding: 0 24px; }
+    .tech-grid { grid-template-columns: repeat(2, 1fr); }
+    .timeline::before { left: 0; }
+    .timeline-item { grid-template-columns: 1fr; gap: 8px; }
+    .timeline-item::before { left: 0; }
+    .timeline-date { text-align: left; }
+    .timeline-content { padding-left: 16px; }
+    .hero-left { padding: 140px 24px 80px; }
+    footer { flex-direction: column; gap: 14px; text-align: center; padding: 36px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">王珩宇<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">关于</a></li>
+    <li><a href="#experience">经历</a></li>
+    <li><a href="#projects">项目</a></li>
+    <li><a href="#skills">技能</a></li>
+    <li><a href="#contact">联系</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-left">
+    <p class="hero-tag">AI产品经理 · UNSW 硕士在读</p>
+    <h1 class="hero-name">王珩宇<br><em>Hengyu</em></h1>
+    <p class="hero-en">AI Product Manager</p>
+    <p class="hero-desc">
+      热衷于用数据驱动产品决策，深度理解用户需求与商业逻辑的交汇点。
+      曾在百度互联网头部公司实习，跨越产品、数据与技术三个维度积累实战经验。
+    </p>
+    <div class="hero-actions">
+      <a href="#experience" class="btn-primary">查看经历</a>
+      <a href="#contact" class="btn-secondary">取得联系</a>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="hero-art">
+      <div class="art-initials">WHY</div>
+      <div class="art-circle"></div>
+      <div class="art-circle"></div>
+      <div class="art-circle"></div>
+      <div class="art-dot"></div>
+      <div class="art-dot"></div>
+    </div>
+    <div class="hero-badge">
+      <strong>4</strong>
+      <span>段实习经历</span>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-section">
+  <div class="marquee-track">
+    <span class="marquee-item">竞品分析</span><span class="marquee-item marquee-sep">·</span>
+    <span class="marquee-item">用户研究</span><span class="marquee-item marquee-sep">·</span>
+    <span class="marquee-item">数据驱动</span><span class="marquee-item marquee-sep">·</span>
+    <span class="marquee-item">深度学习</span><span class="marquee-item marquee-sep">·</span>
+    <span class="marquee-item">API 开发</span><span class="marquee-item marquee-sep">·</span>
+    <span class="marquee-item">产品原型</span><span class="marquee-item marquee-sep">·</span>
+    <span class="marquee-item">SQL · Python</span><span class="marquee-item marquee-sep">·</span>
+    <span class="marquee-item">网络安全</span><span class="marquee-item marquee-sep">·</span>
+    <span class="marquee-item">Competitive Analysis</span><span class="marquee-item marquee-sep">·</span>
+    <span class="marquee-item">User Insights</span><span class="marquee-item marquee-sep">·</span>
+    <span class="marquee-item">Data Analytics</span><span class="marquee-item marquee-sep">·</span>
+    <span class="marquee-item">Deep Learning</span><span class="marquee-item marquee-sep">·</span>
+    <span class="marquee-item">RESTful API</span><span class="marquee-item marquee-sep">·</span>
+    <span class="marquee-item">PostgreSQL</span><span class="marquee-item marquee-sep">·</span>
+    <!-- repeat -->
+    <span class="marquee-item">竞品分析</span><span class="marquee-item marquee-sep">·</span>
+    <span class="marquee-item">用户研究</span><span class="marquee-item marquee-sep">·</span>
+    <span class="marquee-item">数据驱动</span><span class="marquee-item marquee-sep">·</span>
+    <span class="marquee-item">深度学习</span><span class="marquee-item marquee-sep">·</span>
+    <span class="marquee-item">API 开发</span><span class="marquee-item marquee-sep">·</span>
+    <span class="marquee-item">产品原型</span><span class="marquee-item marquee-sep">·</span>
+    <span class="marquee-item">SQL · Python</span><span class="marquee-item marquee-sep">·</span>
+    <span class="marquee-item">网络安全</span><span class="marquee-item marquee-sep">·</span>
+    <span class="marquee-item">Competitive Analysis</span><span class="marquee-item marquee-sep">·</span>
+    <span class="marquee-item">User Insights</span><span class="marquee-item marquee-sep">·</span>
+    <span class="marquee-item">Data Analytics</span><span class="marquee-item marquee-sep">·</span>
+    <span class="marquee-item">Deep Learning</span><span class="marquee-item marquee-sep">·</span>
+    <span class="marquee-item">RESTful API</span><span class="marquee-item marquee-sep">·</span>
+    <span class="marquee-item">PostgreSQL</span><span class="marquee-item marquee-sep">·</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<div id="about">
+  <div class="section-wrap">
+  <p class="section-label reveal" style="font-size:32px;">01 · 关于我</p>
+    <div class="about-grid">
+      <div>
+        <h2 class="about-headline reveal">
+          数据与产品<br>
+          的<em>交汇点</em>
+        </h2>
+        <div class="about-body reveal">
+          <p>我是王珩宇，目前就读于新南威尔士大学（QS #19）信息技术硕士，同时具备计算机科学本科背景。我的独特优势在于横跨<strong>产品思维、数据分析与技术开发</strong>三个维度。</p>
+          <p>在百度网盘产品团队，我完整经历了从竞品分析、用户访谈、需求挖掘到低保真原型验证的产品闭环；在梧桐电子，我用 SQL 和 Excel 构建了完整的业务数据分析体系，将数据准确率提升至 99.2%。</p>
+          <p>我相信：好的产品决策来自对用户的深度理解，而好的数据分析让这种理解有据可依。</p>
+        </div>
+      </div>
+      <div>
+        <div class="edu-card reveal">
+          <p class="edu-degree">硕士 · Master of Information Technology</p>
+          <h3 class="edu-school">新南威尔士大学 UNSW</h3>
+          <p class="edu-meta">悉尼，澳大利亚 · 2024.09 — 2026.06 · QS #19</p>
+          <p class="edu-courses">数据结构与算法、数据服务工程、神经网络与深度学习、计算机视觉、工程决策、项目管理</p>
+        </div>
+        <div class="edu-card reveal">
+          <p class="edu-degree">学士 · Bachelor of Computer Science</p>
+          <h3 class="edu-school">东南大学成贤学院</h3>
+          <p class="edu-meta">南京，江苏 · 2020.09 — 2024.06</p>
+          <p class="edu-courses">数据库原理、数据处理与分析、编程语言、计算机基础、软件工程</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EXPERIENCE -->
+<div id="experience" class="exp-bg">
+  <div class="section-wrap">
+    <p class="section-label reveal" style="font-size:32px;">02 · 实习经历</p>
+    <div class="timeline">
+
+      <div class="timeline-item reveal">
+        <div class="timeline-date" style="font-size:10px;">2025.06 — 2025.09  <span class="timeline-type" style="font-size:10px;">产品经理</span>
+</div>
+        <div class="timeline-content">
+          <h3 class="timeline-role">产品经理实习生</h3>
+          <p class="timeline-company">百度 · 百度网盘 &amp; 百度文库 产品部 · 北京</p>
+          <ul class="timeline-list">
+            <li><strong>竞品分析：</strong>深度体验夸克、腾讯文档等核心竞品，从功能、体验、AI 能力、会员体系四维度拆解，输出竞品深度分析报告，提炼 10+ 核心发现点与 3 个紧急产品优化建议</li>
+            <li><strong>用户洞察：</strong>定义核心用户画像，设计调研问卷与访谈提纲，执行远程用户访谈，通过编码归类提炼用户核心痛点，形成用户洞察分析报告</li>
+            <li><strong>需求挖掘：</strong>整合竞品差距与用户痛点，绘制"问题 - 机会"映射图，提出 3 个网盘 + 文库融合功能优化方向</li>
+            <li><strong>方案落地：</strong>选取高优先级功能方向制作低保真原型，回访目标用户完成功能概念验证，整理全套研究文档与成果知识库</li>
+          </ul>
+          <div class="timeline-tags">
+            <span class="tag">竞品分析</span><span class="tag">用户访谈</span><span class="tag">低保真原型</span><span class="tag">AI 功能</span><span class="tag">需求文档</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item reveal">
+        <div class="timeline-date" style="font-size:10px;">2024.06 — 2024.08  <span class="timeline-type" style="font-size:10px;">数据分析</span></div>
+        <div class="timeline-content">
+          <h3 class="timeline-role">大数据分析助理</h3>
+          <p class="timeline-company">苏州梧桐电子有限公司 · 苏州</p>
+          <ul class="timeline-list">
+            <li><strong>数据支撑：</strong>使用 Excel、SQL 完成全量业务数据清洗与标准化处理，将数据准确率提升至 <strong>99.2%</strong></li>
+            <li><strong>指标搭建：</strong>提取销量、客单价、复购率等核心业务指标，搭建数据统计框架，制作周 / 月度数据报表</li>
+            <li><strong>用户分析：</strong>参与用户行为数据挖掘，提炼用户消费、复购规律，识别高价值用户群体需求</li>
+            <li><strong>需求响应：</strong>高效响应 <strong>15+</strong> 业务场景临时数据查询需求，推动产品数据分析效率提升 <strong>40%</strong></li>
+          </ul>
+          <div class="timeline-tags">
+            <span class="tag">SQL</span><span class="tag">Excel</span><span class="tag">数据清洗</span><span class="tag">用户分层</span><span class="tag">报表</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item reveal">
+        <div class="timeline-date" style="font-size:10px;">2022.06 — 2022.08  <span class="timeline-type" style="font-size:10px;">软件测试</span></div>
+        <div class="timeline-content">
+          <h3 class="timeline-role">软件测试实习生</h3>
+          <p class="timeline-company">北京湛腾世纪科技有限公司 · 北京</p>
+          <ul class="timeline-list">
+            <li>撰写 <strong>50+</strong> 标准化测试用例，将测试覆盖率提升至 <strong>90%</strong></li>
+            <li>每月挖掘 <strong>15+</strong> 产品功能缺陷，精准记录复现步骤与数据指标</li>
+            <li>对缺陷数据分类统计、归因分析，推动缺陷解决效率提升 <strong>30%</strong></li>
+          </ul>
+          <div class="timeline-tags">
+            <span class="tag">测试用例</span><span class="tag">缺陷管理</span><span class="tag">质量保障</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item reveal">
+        <div class="timeline-date" style="font-size:10px;">2021.06 — 2021.08  <span class="timeline-type" style="font-size:10px;">网络安全</span></div>
+        <div class="timeline-content">
+          <h3 class="timeline-role">网络安全实习生</h3>
+          <p class="timeline-company">北京天融信网络安全技术有限公司 · 北京</p>
+          <ul class="timeline-list">
+            <li>参与设计基于角色的访问控制安全 API 接口，搭建高风险操作实时监控与告警机制</li>
+            <li>协助开展现网系统漏洞扫描，输出安全评估数据报告</li>
+          </ul>
+          <div class="timeline-tags">
+            <span class="tag">API 安全</span><span class="tag">权限管理</span><span class="tag">漏洞扫描</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- METRICS -->
+<div class="metrics-strip">
+  <div class="metrics-inner">
+    <div class="metric-item reveal">
+      <div class="metric-num">99.2<span>%</span></div>
+      <div class="metric-label">数据准确率</div>
+      <div class="metric-desc">数据清洗标准化后达成</div>
+    </div>
+    <div class="metric-item reveal">
+      <div class="metric-num">40<span>%</span></div>
+      <div class="metric-label">分析效率提升</div>
+      <div class="metric-desc">数据响应效率优化成果</div>
+    </div>
+    <div class="metric-item reveal">
+      <div class="metric-num">90<span>%</span></div>
+      <div class="metric-label">测试覆盖率</div>
+      <div class="metric-desc">50+ 标准化测试用例保障</div>
+    </div>
+    <div class="metric-item reveal">
+      <div class="metric-num">4<span>段</span></div>
+      <div class="metric-label">实习经历</div>
+      <div class="metric-desc">产品 · 数据 · 测试 · 安全</div>
+    </div>
+  </div>
+</div>
+
+<!-- PROJECTS -->
+<div id="projects">
+  <div class="section-wrap">
+    <p class="section-label reveal" style="font-size:32px;">03 · 项目经历</p>
+    <div class="projects-grid">
+
+      <div class="project-card reveal">
+        <p class="project-num">001</p>
+        <p class="project-context">悉尼，澳大利亚 · 2025.09—2025.12</p>
+        <h3 class="project-title">悉尼公交网络 API 系统开发</h3>
+        <p class="project-desc">
+          担任项目负责人，为悉尼公交网络开发后端 API 系统，整合 6 类公交关联数据集、管理 1000+ 站点数据，解决数据检索效率低、匹配准确率差的核心问题。
+          基于 PostgreSQL 设计关联数据表并做索引优化，完成 15+ RESTful 数据接口设计，实现三级角色权限数据管控；开发站点智能模糊搜索，搭建自动化测试框架。
+        </p>
+        <div class="project-result">
+          🎯 复杂数据查询响应时间降低 <strong>40%</strong>，接口平均响应时间 &lt;200ms；站点匹配准确率达 <strong>92%</strong>，自动化测试覆盖率从 50% 提升至 <strong>80%</strong>
+        </div>
+        <div class="timeline-tags">
+          <span class="tag">PostgreSQL</span><span class="tag">RESTful API</span><span class="tag">权限管理</span><span class="tag">自动化测试</span>
+        </div>
+      </div>
+
+      <div class="project-card reveal">
+        <p class="project-num">002</p>
+        <p class="project-context">悉尼，澳大利亚 · 2025.03—2025.05</p>
+        <h3 class="project-title">基于深度学习的害虫自动识别</h3>
+        <p class="project-desc">
+          担任项目负责人，基于 102 类、75000+ 张农业害虫图像数据集，解决害虫识别准确率低、少数类样本识别效果差的问题。
+          对图像数据清洗、增强并通过过采样解决类别不平衡；基于 PyTorch 搭建 3 类深度学习模型，迭代优化训练策略，用混淆矩阵多维度分析模型识别结果，输出多模型对比分析报告。
+        </p>
+        <div class="project-result">
+          🎯 害虫图像识别准确率从 57.8% 提升至 <strong>68.4%</strong>，提升 10.6 个百分点；形成可复用的图像数据预处理流程
+        </div>
+        <div class="timeline-tags">
+          <span class="tag">PyTorch</span><span class="tag">深度学习</span><span class="tag">计算机视觉</span><span class="tag">数据增强</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- SKILLS -->
+<div id="skills" class="exp-bg">
+  <div class="section-wrap">
+    <p class="section-label reveal" style="font-size:32px;">04 · 技能栈</p>
+    <div class="tech-grid reveal">
+      <div class="tech-item">
+        <div class="tech-icon">🐍</div>
+        <div class="tech-name">Python</div>
+        <div class="tech-type">数据分析 · 深度学习</div>
+      </div>
+      <div class="tech-item">
+        <div class="tech-icon">🗄️</div>
+        <div class="tech-name">SQL / MySQL</div>
+        <div class="tech-type">数据查询 · 数据建模</div>
+      </div>
+      <div class="tech-item">
+        <div class="tech-icon">📊</div>
+        <div class="tech-name">Excel</div>
+        <div class="tech-type">数据清洗 · 可视化报表</div>
+      </div>
+      <div class="tech-item">
+        <div class="tech-icon">⚙️</div>
+        <div class="tech-name">C++</div>
+        <div class="tech-type">算法 · 系统编程</div>
+      </div>
+      <div class="tech-item">
+        <div class="tech-icon">🔥</div>
+        <div class="tech-name">PyTorch</div>
+        <div class="tech-type">深度学习 · 模型训练</div>
+      </div>
+      <div class="tech-item">
+        <div class="tech-icon">🐘</div>
+        <div class="tech-name">PostgreSQL</div>
+        <div class="tech-type">API 开发 · 索引优化</div>
+      </div>
+      <div class="tech-item">
+        <div class="tech-icon">🔧</div>
+        <div class="tech-name">Git / GitHub</div>
+        <div class="tech-type">版本控制 · 协作开发</div>
+      </div>
+      <div class="tech-item">
+        <div class="tech-icon">📷</div>
+        <div class="tech-name">摄影</div>
+        <div class="tech-type">个人爱好 · 视觉审美</div>
+      </div>
+    </div>
+
+    <div style="margin-top: 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 2px; background: var(--line-dark); border: 1px solid var(--line-dark);" class="reveal">
+      <div style="background: white; padding: 28px 32px;">
+        <p style="font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 16px;">核心能力</p>
+        <div class="skills-grid" style="border: none; background: transparent; gap: 8px; grid-template-columns: 1fr;">
+          <div class="skill-item" style="border: 1px solid var(--line-dark);">
+            <div class="skill-name">竞品分析 &amp; 用户研究</div>
+            <div class="skill-bar"><div class="skill-bar-fill" style="width: 90%"></div></div>
+          </div>
+          <div class="skill-item" style="border: 1px solid var(--line-dark);">
+            <div class="skill-name">数据分析 &amp; 可视化</div>
+            <div class="skill-bar"><div class="skill-bar-fill" style="width: 88%"></div></div>
+          </div>
+          <div class="skill-item" style="border: 1px solid var(--line-dark);">
+            <div class="skill-name">产品需求文档 &amp; 原型</div>
+            <div class="skill-bar"><div class="skill-bar-fill" style="width: 85%"></div></div>
+          </div>
+          <div class="skill-item" style="border: 1px solid var(--line-dark);">
+            <div class="skill-name">深度学习 &amp; CV</div>
+            <div class="skill-bar"><div class="skill-bar-fill" style="width: 75%"></div></div>
+          </div>
+        </div>
+      </div>
+      <div style="background: white; padding: 28px 32px;">
+        <p style="font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 16px;">语言能力</p>
+        <div style="margin-bottom: 20px;">
+          <p style="font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; margin-bottom: 4px;">普通话</p>
+          <p style="font-size: 11px; color: var(--blue); letter-spacing: 1px;">母语 Native</p>
+        </div>
+        <div>
+          <p style="font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; margin-bottom: 4px;">英语</p>
+          <p style="font-size: 11px; color: var(--blue); letter-spacing: 1px;">雅思 IELTS 6.5 · 工作语言</p>
+        </div>
+        <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--line-dark);">
+          <p style="font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px;">求职意向</p>
+          <p style="font-family: 'Noto Serif SC', serif; font-size: 14px; line-height: 1.8; color: var(--muted);">产品经理 / 数据产品经理<br>2026届应届毕业生</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<div id="contact" class="contact-bg">
+  <div class="section-wrap">
+    <p class="section-label reveal" style="font-size:32px;">05 · 联系我</p>
+    <div class="contact-grid">
+      <div>
+        <h2 class="contact-headline reveal">
+          期待<em>有趣</em><br>
+          的机会
+        </h2>
+        <p class="contact-sub reveal">
+          无论是产品实习、校招机会、产品经理交流，还是项目合作，我都很乐意沟通。
+          通常在 24 小时内回复。
+        </p>
+        <div class="contact-links reveal">
+          <a href="mailto:hengyu23@163.com" class="contact-link">
+            <div>
+              <span class="contact-link-label">邮箱</span>
+              <span class="contact-link-value">hengyu23@163.com</span>
+            </div>
+            <span class="contact-link-arrow">→</span>
+          </a>
+          <a href="tel:18030809246" class="contact-link">
+            <div>
+              <span class="contact-link-label">手机 / 微信</span>
+              <span class="contact-link-value">18030809246</span>
+            </div>
+            <span class="contact-link-arrow">→</span>
+          </a>
+          <div class="contact-link" style="cursor:default;">
+            <div>
+              <span class="contact-link-label">现居</span>
+              <span class="contact-link-value">悉尼，澳大利亚 · 应届 2026</span>
+            </div>
+            <span style="font-size:16px;">📍</span>
+          </div>
+          <div class="contact-link" style="cursor:default;">
+            <div>
+              <span class="contact-link-label">意向岗位</span>
+              <span class="contact-link-value">AI产品经理</span>
+            </div>
+            <span style="font-size:16px;">🎯</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <div class="contact-form">
+          <div class="form-field">
+            <label>你的名字</label>
+            <input type="text" placeholder="HR 或同学都欢迎">
+          </div>
+          <div class="form-field">
+            <label>联系方式</label>
+            <input type="text" placeholder="邮箱 / 微信 / 电话">
+          </div>
+          <div class="form-field">
+            <label>想聊的话题</label>
+            <textarea placeholder="产品机会、项目合作、行业交流……"></textarea>
+          </div>
+          <div class="form-submit">
+            <button class="btn-primary" onclick="handleSubmit(event)">发送消息 →</button>
+          </div>
+        </div>
+        <p id="form-feedback" style="font-size:12px;color:var(--blue);margin-top:12px;text-align:right;opacity:0;transition:opacity 0.3s;"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">王珩宇<span>.</span></div>
+  <div class="footer-copy">© 2026 · UNSW Master of IT · 2026届应届生</div>
+  <a href="#hero" class="footer-back">↑ 回到顶部</a>
+</footer>
+
+<script>
+// ─── Custom cursor
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let cx = 0, cy = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => {
+  cx = e.clientX; cy = e.clientY;
+  cursor.style.left = cx + 'px'; cursor.style.top = cy + 'px';
+});
+(function animRing() {
+  rx += (cx - rx) * 0.12; ry += (cy - ry) * 0.12;
+  ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+  requestAnimationFrame(animRing);
+})();
+document.querySelectorAll('a, button, .project-card, .timeline-item, .tech-item, .edu-card').forEach(el => {
+  el.addEventListener('mouseenter', () => { cursor.style.width = '18px'; cursor.style.height = '18px'; ring.style.width = '52px'; ring.style.height = '52px'; });
+  el.addEventListener('mouseleave', () => { cursor.style.width = '10px'; cursor.style.height = '10px'; ring.style.width = '36px'; ring.style.height = '36px'; });
+});
+
+// ─── Scroll reveal
+const observer = new IntersectionObserver(entries => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) setTimeout(() => entry.target.classList.add('visible'), i * 55);
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// ─── Skill bar
+const barObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) setTimeout(() => e.target.classList.add('animate'), 300); });
+}, { threshold: 0.5 });
+document.querySelectorAll('.skill-bar-fill').forEach(b => barObs.observe(b));
+
+// ─── Form
+function handleSubmit(e) {
+  e.preventDefault();
+  const fb = document.getElementById('form-feedback');
+  fb.textContent = '✓ 消息已发送！期待与你交流～';
+  fb.style.opacity = '1';
+  setTimeout(() => fb.style.opacity = '0', 3500);
+}
+
+// ─── Nav scroll highlight
+const secs = document.querySelectorAll('[id]');
+const links = document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll', () => {
+  let cur = '';
+  secs.forEach(s => { if (window.scrollY >= s.offsetTop - 120) cur = s.id; });
+  links.forEach(a => { a.style.color = a.getAttribute('href') === '#' + cur ? 'var(--ink)' : ''; });
+});
+</script>
+</body>
+</html>
